@@ -1,0 +1,32 @@
+
+{
+  "name": "leado",
+  "version": "3.0.0",
+  "description": "PLAYBEAT LEADPULSE - Lead Employee Engine",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "build": "prisma generate",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "5.14.0",
+    "prisma": "5.14.0",
+    "express": "4.19.2",
+    "cors": "2.8.5",
+    "bcryptjs": "2.4.3",
+    "jsonwebtoken": "9.0.2",
+    "dotenv": "16.4.5",
+    "axios": "1.7.2",
+    "cheerio": "1.0.0-rc.12",
+    "p-limit": "4.0.0",
+    "csv-stringify": "6.4.6",
+    "nodemailer": "6.9.13",
+    "node-cron": "3.0.3"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

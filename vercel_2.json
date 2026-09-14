@@ -1,0 +1,14 @@
+
+{
+  "version": 2,
+  "buildCommand": "npx prisma generate || echo 'prisma generate failed but continue'",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "prisma/**"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/(.*)", "destination": "/api/index.js" }
+  ]
+}

@@ -1,0 +1,111 @@
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  role          String   @default("EMPLOYEE")
+  seatId        String?
+  seat          Seat?    @relation(fields: [seatId], references: [id])
+  isActive      Boolean  @default(true)
+  createdById   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  leads         Lead[]   @relation("AssignedTo")
+  assignedSeats Seat[]   @relation("SeatUser")
+}
+
+model Seat {
+  id         String   @id @default(cuid())
+  seatNumber Int      @unique
+  name       String
+  maxLeads   Int      @default(250)
+  status     String   @default("AVAILABLE")
+  user       User?    @relation("SeatUser", fields: [userId], references: [id])
+  userId     String?  @unique
+  leads      Lead[]   @relation("SeatLeads")
+  createdAt  DateTime @default(now())
+  User       User[]
+}
+
+model LandingPage {
+  id           String   @id @default(cuid())
+  logoUrl      String?
+  heroImageUrl String?
+  title        String   @default("PLAYBEAT LEADPULSE")
+  subtitle     String   @default("YOUR WORLD OF LEAD POSSIBILITIES")
+  protected    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Campaign {
+  id           String   @id @default(cuid())
+  name         String
+  industry     String?
+  country      String?
+  city         String?
+  keywords     String[] @default([])
+  targetCount  Int      @default(1000)
+  status       String   @default("DRAFT")
+  currentStage String   @default("DRAFT")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  jobs         Job[]
+  leads        Lead[]
+}
+
+model Job {
+  id         String   @id @default(cuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  status     String   @default("QUEUED")
+  stage      String   @default("DISCOVERY")
+  batchSize  Int      @default(50)
+  progress   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Lead {
+  id             String    @id @default(cuid())
+  campaignId     String?
+  campaign       Campaign? @relation(fields: [campaignId], references: [id])
+  companyName    String?
+  email          String?
+  emailStatus    String?   @default("UNKNOWN")
+  phoneRaw       String?
+  whatsappDetected Boolean @default(false)
+  website        String?
+  city           String?
+  country        String?
+  industry       String?
+  leadScore      Int       @default(0)
+  fingerprint    String?   @unique
+  assignedToId   String?
+  assignedTo     User?     @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedSeatId String?
+  assignedSeat   Seat?     @relation("SeatLeads", fields: [assignedSeatId], references: [id])
+  assignedById   String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model CallLog {
+  id        String   @id @default(cuid())
+  leadId    String?
+  userId    String?
+  status    String   @default("INITIATED")
+  duration  Int      @default(0)
+  createdAt DateTime @default(now())
+}

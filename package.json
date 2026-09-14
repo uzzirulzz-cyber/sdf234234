@@ -1,0 +1,25 @@
+
+{
+  "name": "leado",
+  "version": "3.0.2-node24-crash-fix",
+  "description": "PLAYBEAT LEADPULSE - Lead Employee Engine - Node 24 fix",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "build": "npx prisma generate",
+    "postinstall": "npx prisma generate",
+    "vercel-build": "npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "5.14.0",
+    "prisma": "5.14.0",
+    "express": "4.19.2",
+    "cors": "2.8.5",
+    "bcryptjs": "2.4.3",
+    "jsonwebtoken": "9.0.2",
+    "dotenv": "16.4.5"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}
